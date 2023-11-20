@@ -147,10 +147,11 @@ def consulta_6(conn):
 def main():
     st.title('1. Título - Indicadores sobre Ensino Superior')
 
-    file_path = 'mecData.db'
-    if not (os.path.exists(file_path)):
-        url = "https://drive.usercontent.google.com/download?id=11-hmllHshrtNt5F1RHKRAd4wTzspIuZ1&export=download&authuser=2&confirm=t&uuid=8cc3ef74-10dc-49f1-a0d8-a52b727138ac&at=APZUnTUR4ucyy1iUFwRrSX7vFx_v:1700484925377"
-        gdown.download(url, "mecData.db", quiet=False)
+    file_path = 'mecDataReduced.db'
+    #file_path = 'mecData.db'
+    #if not (os.path.exists(file_path)):
+    #    url = "https://drive.usercontent.google.com/download?id=11-hmllHshrtNt5F1RHKRAd4wTzspIuZ1&export=download&authuser=2&confirm=t&uuid=8cc3ef74-10dc-49f1-a0d8-a52b727138ac&at=APZUnTUR4ucyy1iUFwRrSX7vFx_v:1700484925377"
+    #    gdown.download(url, "mecData.db", quiet=False)
 
     conn = sqlite3.connect('mecData.db')
 
