@@ -88,7 +88,7 @@ def consulta_2(conn):
 
     df = pd.read_sql_query(query, conn)
     return df
-
+    
 def consulta_3(conn):
     query = """
     SELECT DISTINCT
@@ -144,6 +144,22 @@ def consulta_6(conn):
     df = pd.read_sql_query(query, conn)
     return df 
 
+def consulta_7(conn):
+    query = """
+    SELECT
+      Tematica.NOME_AREA_CONHECIMENTO,
+      COUNT(GRADUACAO.COD_AREA_CONHECIMENTO) AS Quantidade_Cursos
+    FROM
+      Tematica
+    JOIN
+      GRADUACAO ON Tematica.CODIGO_AREA_CONHECIMENTO = GRADUACAO.COD_AREA_CONHECIMENTO
+    GROUP BY
+      Tematica.NOME_AREA_CONHECIMENTO
+    """
+
+    df = pd.read_sql_query(query, conn)
+    return df 
+    
 def main():
     st.title('1. Título - Indicadores sobre Ensino Superior')
 
@@ -171,22 +187,27 @@ def main():
             df_consulta_2 = consulta_2(conn)
             st.dataframe(df_consulta_2)
 
-    if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização'):
+    if st.button('Consulta 3 - Instituicoes de ensino localizadas em Belo Horizonte que ofertam tanto cursos de graduacao quanto de especializacao'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_7 = consulta_7(conn)
+            st.dataframe(df_consulta_7)
+            
+    if st.button('Consulta 4 - Instituições que ofertam cursos de graduação e especialização'):
         with st.spinner('Executando consulta...'):
             df_consulta_3 = consulta_3(conn)
             st.dataframe(df_consulta_3)
     
-    if st.button('Consulta 4 - Cursos de graduacao ofertados no municipio de Belo Horizonte'):
+    if st.button('Consulta 5 - Cursos de graduacao ofertados no municipio de Belo Horizonte'):
         with st.spinner('Executando consulta...'):
             df_consulta_4 = consulta_4(conn)
             st.dataframe(df_consulta_4)  
     
-    if st.button('Consulta 5 - Cursos de especialização ofertados no municipio de Belo Horizonte'):
+    if st.button('Consulta 6 - Cursos de especialização ofertados no municipio de Belo Horizonte'):
         with st.spinner('Executando consulta...'):
             df_consulta_5 = consulta_5(conn)
             st.dataframe(df_consulta_5)
     
-    if st.button('Consulta 6 - Instituicoes de ensino localizadas em Belo Horizonte que ofertam tanto cursos de graduacao quanto de especializacao'):
+    if st.button('Consulta 7 - Instituicoes de ensino localizadas em Belo Horizonte que ofertam tanto cursos de graduacao quanto de especializacao'):
         with st.spinner('Executando consulta...'):
             df_consulta_6 = consulta_6(conn)
             st.dataframe(df_consulta_6)
