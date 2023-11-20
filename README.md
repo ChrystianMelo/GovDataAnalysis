@@ -28,4 +28,7 @@ Baixe os [dados](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-en
 ## Contato
 
 Para dúvidas ou mais informações, entre em contato. <br>
-[Chrystian Melo](meloo.chrys@gmail.com)
+[Chrystian Melo](meloo.chrys@gmail.com) <br>
+Fernando Coutinho<br>
+Murillo Ribeiro<br>
+Nauan Barbosa
