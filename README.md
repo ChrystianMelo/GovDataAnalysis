@@ -20,3 +20,12 @@ O objetivo deste banco de dados é fornecer uma representação abrangente e pre
 ## Resultados
 
 Explore os resultados e interaja com o banco de dados através do site [Análise de Dados Governamentais](https://govdataanalysis.streamlit.app/).
+
+## Instruções 
+
+Baixe os dados oferecidos pelo mec referente a graduação e especialização, adicione esses arquivos junto ao notebook do projeto e execute.
+
+## Contato
+
+Para dúvidas ou mais informações, entre em contato. <br>
+[Chrystian Melo](meloo.chrys@gmail.com)
