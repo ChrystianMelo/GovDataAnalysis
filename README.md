@@ -23,7 +23,7 @@ Explore os resultados e interaja com o banco de dados através do site [Análise
 
 ## Instruções 
 
-Baixe os dados oferecidos pelo mec referente a graduação e especialização, adicione esses arquivos junto ao notebook do projeto e execute.
+Baixe os [dados]((https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-ensino-superior)) oferecidos pelo mec referente a graduação e especialização, adicione esses arquivos junto ao notebook do projeto e execute.
 
 ## Contato
 
