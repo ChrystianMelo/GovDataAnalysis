@@ -161,7 +161,7 @@ def consulta_7(conn):
     return df 
     
 def main():
-    st.title('1. Título - Indicadores sobre Ensino Superior')
+    st.title('Indicadores sobre Ensino Superior[dados reduzidos]')
 
     file_path = 'mecData.db'
     if not (os.path.exists(file_path)):
@@ -187,7 +187,7 @@ def main():
             df_consulta_2 = consulta_2(conn)
             st.dataframe(df_consulta_2)
 
-    if st.button('Consulta 3 - Instituicoes de ensino localizadas em Belo Horizonte que ofertam tanto cursos de graduacao quanto de especializacao'):
+    if st.button('Consulta 3 - Quantidade de cursos de graduação em cada áreas de conhecimentos '):
         with st.spinner('Executando consulta...'):
             df_consulta_7 = consulta_7(conn)
             st.dataframe(df_consulta_7)
