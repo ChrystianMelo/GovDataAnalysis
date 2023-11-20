@@ -38,7 +38,7 @@ def show_views_info(conn):
 
 def show_data_info():
     title_with_link = f'Informações sobre as Bases de Dados do [mec](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-ensino-superior)'
-    st.markdown(f"# {title_with_link}")
+    st.header(f"# {title_with_link}")
 
     st.subheader('Tabela de Graduação')
     st.write('Esta tabela contém informações sobre cursos de graduação.')
