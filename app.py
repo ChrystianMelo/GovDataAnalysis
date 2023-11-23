@@ -40,138 +40,148 @@ import json
 import sqlite3
 import os
 import gdown
+import streamlit as st
 
 def downloadFile(file_path, url):
   if not (os.path.exists(file_path)):
       gdown.download(url, file_path, quiet=False)
 
-downloadFile("graduacao.csv", "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
-graduacao =  pd.read_csv("graduacao.csv")
+file_path = "mecData.db"
+if not (os.path.exists(file_path)):
+    downloadFile("graduacao.csv", "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
+    graduacao =  pd.read_csv("graduacao.csv")
 
-# O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
-# downloadFile("especializacao.csv", "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
-downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
-especializacao = pd.read_csv("especializacao.csv")
+    # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
+    # downloadFile("especializacao.csv", "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
+    downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
+    especializacao = pd.read_csv("especializacao.csv")
 
-conn = sqlite3.connect('mecData.db')
+    conn = sqlite3.connect(file_path)
 
-graduacao.to_sql('Graduacao', conn, if_exists='replace', index=False)
-especializacao.to_sql('Especializacao', conn, if_exists='replace', index=False)
+    graduacao.to_sql('Graduacao', conn, if_exists='replace', index=False)
+    especializacao.to_sql('Especializacao', conn, if_exists='replace', index=False)
+else:
+    conn = sqlite3.connect(file_path)
 
 cursor = conn.cursor()
 
 """## Normalização"""
 
-query = """
-SELECT DISTINCT
-  CODIGO_AREA_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, AREA_OCDE_CINE AS NOME_AREA_CONHECIMENTO
-FROM
-  graduacao
-GROUP BY CODIGO_AREA_CONHECIMENTO
-UNION
-SELECT DISTINCT
-  CODIGO_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, OCDE_CINE AS NOME_AREA_CONHECIMENTO
-FROM
-  especializacao
-GROUP BY CODIGO_AREA_CONHECIMENTO
-"""
-df = pd.read_sql_query(query, conn)
-df.to_sql('Tematica', conn, if_exists='replace', index=False)
+if not (os.path.exists(file_path)):
+    query = """
+    SELECT DISTINCT
+      CODIGO_AREA_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, AREA_OCDE_CINE AS NOME_AREA_CONHECIMENTO
+    FROM
+      graduacao
+    GROUP BY CODIGO_AREA_CONHECIMENTO
+    UNION
+    SELECT DISTINCT
+      CODIGO_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, OCDE_CINE AS NOME_AREA_CONHECIMENTO
+    FROM
+      especializacao
+    GROUP BY CODIGO_AREA_CONHECIMENTO
+    """
+    df = pd.read_sql_query(query, conn)
+    df.to_sql('Tematica', conn, if_exists='replace', index=False)
 
-cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
-cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
 
-cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
 
-conn.commit()
+    conn.commit()
 
-print (df)
+    print (df)
 
-query = """
-SELECT DISTINCT
-  CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
-FROM
-  graduacao
-UNION
-SELECT DISTINCT
-  CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
-FROM
-  especializacao
-"""
+if not (os.path.exists(file_path)):
+    query = """
+    SELECT DISTINCT
+      CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
+    FROM
+      graduacao
+    UNION
+    SELECT DISTINCT
+      CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
+    FROM
+      especializacao
+    """
 
-df = pd.read_sql_query(query, conn)
-df.to_sql('Municipio', conn, if_exists='replace', index=False)
+    df = pd.read_sql_query(query, conn)
+    df.to_sql('Municipio', conn, if_exists='replace', index=False)
 
-cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
-cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
-cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
 
-cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
-cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
-cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
 
-conn.commit()
+    conn.commit()
 
-print (df)
+    print (df)
 
-query = """
-SELECT DISTINCT
-  CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
-FROM
-  graduacao
-UNION
-SELECT DISTINCT
-  CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
-FROM
-  especializacao
-"""
+if not (os.path.exists(file_path)):
+    query = """
+    SELECT DISTINCT
+      CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
+    FROM
+      graduacao
+    UNION
+    SELECT DISTINCT
+      CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
+    FROM
+      especializacao
+    """
 
-df = pd.read_sql_query(query, conn)
-df.to_sql('Instituicao', conn, if_exists='replace', index=False)
+    df = pd.read_sql_query(query, conn)
+    df.to_sql('Instituicao', conn, if_exists='replace', index=False)
 
-cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
-cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
-cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
 
-cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
 
-conn.commit()
+    conn.commit()
 
-print (df)
+    print (df)
 
-query = """
-SELECT DISTINCT
-  CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
-FROM
-  graduacao
-UNION
-SELECT DISTINCT
-  CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
-FROM
-  especializacao
-"""
+if not (os.path.exists(file_path)):
+    query = """
+    SELECT DISTINCT
+      CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
+    FROM
+      graduacao
+    UNION
+    SELECT DISTINCT
+      CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
+    FROM
+      especializacao
+    """
 
-df = pd.read_sql_query(query, conn)
-df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
+    df = pd.read_sql_query(query, conn)
+    df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
 
-cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
-cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
 
-conn.commit()
+    conn.commit()
 
-print (df)
+    print (df)
 
-cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
+if not (os.path.exists(file_path)):
+    cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
 
-cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
+    cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
 
-cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
+    cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
 
-cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_AREA_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
+    cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_AREA_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
 
-cursor.execute("ALTER TABLE Instituicao RENAME COLUMN CODIGO_INSTITUICAO TO COD_INSTITUICAO;")
+    cursor.execute("ALTER TABLE Instituicao RENAME COLUMN CODIGO_INSTITUICAO TO COD_INSTITUICAO;")
 
-conn.commit()
+    conn.commit()
 
 """## Resultado final"""
 
