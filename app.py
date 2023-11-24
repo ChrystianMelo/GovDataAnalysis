@@ -393,7 +393,8 @@ if not (os.path.exists(file_path)):
 else:
     conn = sqlite3.connect(file_path)
 
-st.title('Indicadores sobre Ensino Superior')
+#st.title('Indicadores sobre Ensino Superior')
+st.title(sqlite3.version +'  '+ sys.version)
 
 show_data_info()
 
