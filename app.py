@@ -297,10 +297,10 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Tematica', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
 
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
+    #cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
 
     conn.commit()
 
@@ -321,13 +321,13 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Municipio', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
 
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
+    #cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
+    #cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
+    #cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
 
     conn.commit()
 
@@ -347,11 +347,11 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
 
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
+    #cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
 
     conn.commit()
 
@@ -372,8 +372,8 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
+    #cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
+   # cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
 
     conn.commit()
 
