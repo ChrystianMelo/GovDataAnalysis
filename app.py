@@ -165,7 +165,7 @@ def show_views_info(conn):
     st.header('Informações das Views')
 
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = cursor.fetchall()
 
     for table in tables:
