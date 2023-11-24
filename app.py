@@ -5,7 +5,6 @@ import sqlite3
 import os
 import gdown
 import streamlit as st
-import sys
 
 def downloadFile(file_path, url):
   if not (os.path.exists(file_path)):
@@ -394,8 +393,7 @@ if not (os.path.exists(file_path)):
 else:
     conn = sqlite3.connect(file_path)
 
-#st.title('Indicadores sobre Ensino Superior')
-st.title(sqlite3.version +'  '+ sys.version)
+st.title('Indicadores sobre Ensino Superior')
 
 show_data_info()
 
