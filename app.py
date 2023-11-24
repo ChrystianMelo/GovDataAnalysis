@@ -342,7 +342,7 @@ if not (os.path.exists(file_path)):
 
     conn.commit()
 
-st.title('Indicadores sobre Ensino Superior[dados reduzidos]')
+st.title('Indicadores sobre Ensino Superior')
 
 show_data_info()
 
