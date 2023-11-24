@@ -1,33 +1,33 @@
 # GovDataAnalysis
-# Indicadores sobre Ensino Superior no Brasil
+# Indicators on Higher Education in Brazil
 
-## Visão Geral
+## Overview
 
-Este banco de dados modela uma coleção bem organizada de informações sobre a infraestrutura da educação superior no Brasil. Os dados estão atualizados até 2023 e referem-se a cursos de graduação e especialização devidamente registrados e regulamentados pelo Ministério da Educação.
+This database models a well-organized collection of information regarding the infrastructure of higher education in Brazil. The data is updated until 2023 and pertains to undergraduate and specialization courses duly registered and regulated by the Ministry of Education.
 
-## Propósito
+## Purpose
 
-O objetivo deste banco de dados é fornecer uma representação abrangente e precisa do cenário da educação superior no Brasil. Ele serve como um recurso valioso para pesquisadores, educadores, formuladores de políticas e qualquer pessoa interessada em obter insights sobre a variedade de programas de graduação e especialização oferecidos no país.
+The aim of this database is to provide a comprehensive and accurate representation of the higher education landscape in Brazil. It serves as a valuable resource for researchers, educators, policymakers, and anyone interested in gaining insights into the variety of undergraduate and specialization programs offered in the country.
 
-## Recursos
+## Features
 
-- **Dados Atuais (2023):** O banco de dados contém as informações mais recentes disponíveis, garantindo que os usuários tenham acesso a detalhes atualizados sobre cursos e instituições educacionais.
+- **Current Data (2023):** The database contains the most recent available information, ensuring users have access to updated details about courses and educational institutions.
 
-- **Conformidade Regulatória:** Todas as informações sobre cursos de graduação e especialização são registradas meticulosamente e estão em conformidade com as regulamentações estabelecidas pelo Ministério da Educação.
+- **Regulatory Compliance:** All information about undergraduate and specialization courses is meticulously recorded and complies with the regulations established by the Ministry of Education.
 
-- **Coleção Estruturada:** As informações são organizadas de maneira sistemática, facilitando a navegação e a extração de detalhes relevantes. A estrutura permite consultas e análises eficientes.
+- **Structured Collection:** The information is systematically organized, facilitating navigation and extraction of relevant details. The structure allows for efficient queries and analyses.
 
-## Resultados
+## Results
 
-Explore os resultados e interaja com o banco de dados através do site [Análise de Dados Governamentais](https://govdataanalysis.streamlit.app/).
+Explore the results and interact with the database through the [Government Data Analysis website](https://govdataanalysis.streamlit.app/).
 
-## Instruções 
+## Instructions
 
-Baixe os [dados](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-ensino-superior) oferecidos pelo mec referente a graduação e especialização, adicione esses arquivos junto ao notebook do projeto e execute.
+Download the [data](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-ensino-superior) provided by the Ministry of Education regarding undergraduate and specialization courses, add these files to the project notebook, and execute.
 
-## Contato
+## Contact
 
-Para dúvidas ou mais informações, entre em contato. <br>
+For questions or further information, get in touch with: <br>
 [Chrystian Melo](meloo.chrys@gmail.com) <br>
 Fernando Coutinho<br>
 Murillo Ribeiro<br>
