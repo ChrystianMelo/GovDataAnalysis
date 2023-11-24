@@ -93,7 +93,6 @@ if not (os.path.exists(file_path)):
 
     print (df)
 
-if not (os.path.exists(file_path)):
     query = """
     SELECT DISTINCT
       CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
@@ -120,8 +119,6 @@ if not (os.path.exists(file_path)):
     conn.commit()
 
     print (df)
-
-if not (os.path.exists(file_path)):
     query = """
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
@@ -147,7 +144,6 @@ if not (os.path.exists(file_path)):
 
     print (df)
 
-if not (os.path.exists(file_path)):
     query = """
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
@@ -170,7 +166,6 @@ if not (os.path.exists(file_path)):
 
     print (df)
 
-if not (os.path.exists(file_path)):
     cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
 
     cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
@@ -214,17 +209,17 @@ for table in tables:
 """
 
 def consulta_1(conn):
-  query = """
-  SELECT DISTINCT
+    query = """
+    SELECT DISTINCT
     NOME_CURSO
-  FROM
+    FROM
     GRADUACAO
-  WHERE
+    WHERE
     GRADUACAO.MODALIDADE = 'Educação a Distância'
-  """
-
-  df = pd.read_sql_query(query, conn)
-  return df
+    """
+    
+    df = pd.read_sql_query(query, conn)
+    return df
 
 consulta_1(conn)
 
@@ -241,7 +236,7 @@ def consulta_2(conn):
     WHERE
       CARGA_HORARIA >= 4000
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_2(conn)
@@ -253,7 +248,7 @@ consulta_2(conn)
 """
 
 def consulta_3(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_INSTITUICAO
     FROM
@@ -262,7 +257,7 @@ def consulta_3(conn):
       GRADUACAO.COD_INSTITUICAO = ESPECIALIZACAO.COD_INSTITUICAO
       AND GRADUACAO.COD_INSTITUICAO = INSTITUICAO.COD_INSTITUICAO;
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_3(conn)
@@ -280,9 +275,9 @@ def consulta_4(conn):
     WHERE
       GRADUACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO AND LOCAL_INSTITUICAO.CODIGO_MUNICIPIO = MUNICIPIO.CODIGO_MUNICIPIO
       AND MUNICIPIO.NOME_MUNICIPIO = 'Belo Horizonte'
-
+    
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_4(conn)
@@ -292,7 +287,7 @@ consulta_4(conn)
 """
 
 def consulta_5(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_ESPECIALIZACAO
     FROM
@@ -301,7 +296,7 @@ def consulta_5(conn):
       ESPECIALIZACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO AND LOCAL_INSTITUICAO.CODIGO_MUNICIPIO = MUNICIPIO.CODIGO_MUNICIPIO
       AND MUNICIPIO.NOME_MUNICIPIO = 'Belo Horizonte'
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_5(conn)
@@ -313,7 +308,7 @@ consulta_5(conn)
 """
 
 def consulta_6(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_INSTITUICAO
     FROM
@@ -322,7 +317,7 @@ def consulta_6(conn):
       GRADUACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO AND ESPECIALIZACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO AND LOCAL_INSTITUICAO.CODIGO_MUNICIPIO = MUNICIPIO.CODIGO_MUNICIPIO
       AND MUNICIPIO.NOME_MUNICIPIO = 'Belo Horizonte' AND LOCAL_INSTITUICAO.CODIGO_INSTITUICAO = INSTITUICAO.COD_INSTITUICAO
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_6(conn)
@@ -333,7 +328,7 @@ consulta_6(conn)
 """
 
 def consulta_7(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_MUNICIPIO
     FROM
@@ -341,7 +336,7 @@ def consulta_7(conn):
     WHERE
       GRADUACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO AND ESPECIALIZACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO AND LOCAL_INSTITUICAO.CODIGO_MUNICIPIO = MUNICIPIO.CODIGO_MUNICIPIO
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_7(conn)
@@ -352,7 +347,7 @@ consulta_7(conn)
 """
 
 def consulta_8(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_CURSO
     FROM
@@ -361,7 +356,7 @@ def consulta_8(conn):
       (GRADUACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO OR ESPECIALIZACAO.COD_INSTITUICAO = LOCAL_INSTITUICAO.CODIGO_INSTITUICAO) AND LOCAL_INSTITUICAO.CODIGO_MUNICIPIO = MUNICIPIO.CODIGO_MUNICIPIO
       AND MUNICIPIO.UF = 'MG'
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_8(conn)
@@ -373,7 +368,7 @@ consulta_8(conn)
 """
 
 def consulta_9(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       QT_VAGAS_AUTORIZADAS
     FROM
@@ -384,7 +379,7 @@ def consulta_9(conn):
     GROUP BY
       GRADUACAO.QT_VAGAS_AUTORIZADAS, ESPECIALIZACAO.QT_VAGAS_AUTORIZADAS
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_9(conn)
@@ -394,7 +389,7 @@ consulta_9(conn)
 """
 
 def consulta_10(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_INSTITUICAO
     FROM
@@ -404,7 +399,7 @@ def consulta_10(conn):
     ORDER BY
       GRADUACAO.QT_VAGAS_AUTORIZADAS, ESPECIALIZACAO.QT_VAGAS_AUTORIZADAS DESC
     """
-
+    
     df = pd.read_sql_query(query, conn)
     df
 consulta_10(conn)
