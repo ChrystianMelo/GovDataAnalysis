@@ -279,6 +279,8 @@ if not (os.path.exists(file_path)):
     especializacao.to_sql('Especializacao', conn, if_exists='replace', index=False)
 
     # Normalização
+    cursor = conn.cursor()
+    
     query = """
     SELECT DISTINCT
       CODIGO_AREA_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, AREA_OCDE_CINE AS NOME_AREA_CONHECIMENTO
@@ -390,8 +392,6 @@ if not (os.path.exists(file_path)):
     conn.commit()
 else:
     conn = sqlite3.connect(file_path)
-
-cursor = conn.cursor()
 
 st.title('Indicadores sobre Ensino Superior')
 
