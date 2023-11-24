@@ -95,7 +95,7 @@ def consulta_6(conn):
     df
     
 def consulta_7(conn):
-  query = """
+    query = """
     SELECT DISTINCT
       NOME_MUNICIPIO
     FROM
