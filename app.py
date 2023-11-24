@@ -211,6 +211,57 @@ def show_data_info():
     st.write('Colunas:')
     st.write(esp_columns)
 
+def show_consultas(conn):
+    st.header('Consultas')
+    if st.button('Consulta 1 - Seleção de cursos de graduação a distância'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_1 = consulta_1(conn)
+            st.dataframe(df_consulta_1)
+    
+    if st.button('Consulta 2 - Cursos de Graduação com Carga Horária >= 4000 horas'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_2 = consulta_2(conn)
+            st.dataframe(df_consulta_2)
+    
+    if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_3 = consulta_3(conn)
+            st.dataframe(df_consulta_3)
+    
+    if st.button('Consulta 4 - Cursos de graduacao ofertados no municipio de Belo Horizonte'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_4 = consulta_4(conn)
+            st.dataframe(df_consulta_4)
+    
+    if st.button('Consulta 5 - Cursos de especialização ofertados no municipio de Belo Horizonte'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_5 = consulta_5(conn)
+            st.dataframe(df_consulta_5)
+    
+    if st.button('Consulta 6 - Instituicoes de ensino localizadas em Belo Horizonte que ofertam tanto cursos de graduacao quanto de especializacao'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_6 = consulta_6(conn)
+            st.dataframe(df_consulta_6)
+    
+    if st.button('Consulta 7 - Municipios que possuem instituicoes de ensino tanto de graduacao quanto de especializacao'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_7 = consulta_7(conn)
+            st.dataframe(df_consulta_7)
+    
+    if st.button('Consulta 8 - Curso de especializacao e de graduacao ofertados no estado de Minas Gerais'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_8 = consulta_8(conn)
+            st.dataframe(df_consulta_8)
+            
+    if st.button('Consulta 9 - Vagas totais de especializacao e graduacao em Minas Gerais'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_9 = consulta_9(conn)
+            st.dataframe(df_consulta_9)
+            
+    if st.button('Consulta 10 - Instituicoes ordenadas por numero de vagas de graduacao e especializacao'):
+        with st.spinner('Executando consulta...'):
+            df_consulta_10 = consulta_10(conn)
+            st.dataframe(df_consulta_10)
 
 file_path = "mecData.db"
 if not (os.path.exists(file_path)):
@@ -350,54 +401,4 @@ show_table_info(conn)
 
 show_views_info(conn)
 
-if st.button('Consulta 1 - Seleção de cursos de graduação a distância'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_1 = consulta_1(conn)
-        st.dataframe(df_consulta_1)
-
-if st.button('Consulta 2 - Cursos de Graduação com Carga Horária >= 4000 horas'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_2 = consulta_2(conn)
-        st.dataframe(df_consulta_2)
-
-if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_3 = consulta_3(conn)
-        st.dataframe(df_consulta_3)
-
-if st.button('Consulta 4 - Cursos de graduacao ofertados no municipio de Belo Horizonte'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_4 = consulta_4(conn)
-        st.dataframe(df_consulta_4)
-
-if st.button('Consulta 5 - Cursos de especialização ofertados no municipio de Belo Horizonte'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_5 = consulta_5(conn)
-        st.dataframe(df_consulta_5)
-
-if st.button('Consulta 6 - Instituicoes de ensino localizadas em Belo Horizonte que ofertam tanto cursos de graduacao quanto de especializacao'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_6 = consulta_6(conn)
-        st.dataframe(df_consulta_6)
-
-if st.button('Consulta 7 - Municipios que possuem instituicoes de ensino tanto de graduacao quanto de especializacao'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_7 = consulta_7(conn)
-        st.dataframe(df_consulta_7)
-
-if st.button('Consulta 8 - Curso de especializacao e de graduacao ofertados no estado de Minas Gerais'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_8 = consulta_8(conn)
-        st.dataframe(df_consulta_8)
-        
-if st.button('Consulta 9 - Vagas totais de especializacao e graduacao em Minas Gerais'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_9 = consulta_9(conn)
-        st.dataframe(df_consulta_9)
-        
-if st.button('Consulta 10 - Instituicoes ordenadas por numero de vagas de graduacao e especializacao'):
-    with st.spinner('Executando consulta...'):
-        df_consulta_10 = consulta_10(conn)
-        st.dataframe(df_consulta_10)
-
-cursor = conn.cursor()
+show_consultas(conn)
