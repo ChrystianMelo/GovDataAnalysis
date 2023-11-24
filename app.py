@@ -34,7 +34,7 @@ def consulta_2(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
 
 def consulta_3(conn):
     query = """
@@ -48,7 +48,7 @@ def consulta_3(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
 
 def consulta_4(conn):
     query = """
@@ -63,7 +63,7 @@ def consulta_4(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
 
 def consulta_5(conn):
     query = """
@@ -77,7 +77,7 @@ def consulta_5(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
 
 
 def consulta_6(conn):
@@ -92,7 +92,7 @@ def consulta_6(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
     
 def consulta_7(conn):
     query = """
@@ -105,7 +105,7 @@ def consulta_7(conn):
     """
 
     df = pd.read_sql_query(query, conn)
-    df
+    return df
 
 def consulta_8(conn):
     query = """
@@ -119,7 +119,7 @@ def consulta_8(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
     
 def consulta_9(conn):
     query = """
@@ -135,7 +135,7 @@ def consulta_9(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
     
 def consulta_10(conn):
     query = """
@@ -150,7 +150,7 @@ def consulta_10(conn):
     """
     
     df = pd.read_sql_query(query, conn)
-    df
+    return df
     
 def show_table_info(conn):
     st.header('Informações das Tabelas Normalizadas')
