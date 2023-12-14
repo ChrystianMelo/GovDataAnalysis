@@ -220,7 +220,7 @@ def show_consultas(conn):
             df_consulta_2 = consulta_2(conn)
             st.dataframe(df_consulta_2)
     
-    if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização'):
+    if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização (*)'):
         with st.spinner('Executando consulta...'):
             df_consulta_3 = consulta_3(conn)
             st.dataframe(df_consulta_3)
