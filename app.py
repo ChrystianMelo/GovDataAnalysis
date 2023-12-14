@@ -39,9 +39,9 @@ def consulta_2(conn):
 def consulta_3(conn):
     query = """
     SELECT DISTINCT NOME_INSTITUICAO
-    FROM INTITUICAO
-    JOIN GRADUACAO ON GRADUACAO.COD_INSTITUICAO = INTITUICAO.COD_INSTITUICAO
-    JOIN ESPECIALIZACAO ON ESPECIALIZACAO.COD_INSTITUICAO = INTITUICAO.COD_INSTITUICAO
+    FROM INSTITUICAO
+    JOIN GRADUACAO ON GRADUACAO.COD_INSTITUICAO = INSTITUICAO.COD_INSTITUICAO
+    JOIN ESPECIALIZACAO ON ESPECIALIZACAO.COD_INSTITUICAO = INSTITUICAO.COD_INSTITUICAO
     """
     
     df = pd.read_sql_query(query, conn)
@@ -220,7 +220,7 @@ def show_consultas(conn):
             df_consulta_2 = consulta_2(conn)
             st.dataframe(df_consulta_2)
     
-    if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização (*)'):
+    if st.button('Consulta 3 - Instituições que ofertam cursos de graduação e especialização (**)'):
         with st.spinner('Executando consulta...'):
             df_consulta_3 = consulta_3(conn)
             st.dataframe(df_consulta_3)
