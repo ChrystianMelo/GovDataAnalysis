@@ -294,6 +294,13 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Tematica', conn, if_exists='replace', index=False)
 
+    # Adicionando as chaves
+    query = """
+    ALTER TABLE Tematica
+    ADD PRIMARY KEY (CODIGO_AREA_CONHECIMENTO);
+    """
+    df = pd.read_sql_query(query, conn)
+    
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
 
@@ -314,10 +321,16 @@ if not (os.path.exists(file_path)):
     FROM
       especializacao
     """
-
     df = pd.read_sql_query(query, conn)
     df.to_sql('Municipio', conn, if_exists='replace', index=False)
 
+    # Adicionando as chaves
+    query = """
+    ALTER TABLE Municipio
+    ADD PRIMARY KEY (CODIGO_MUNICIPIO);
+    """
+    df = pd.read_sql_query(query, conn)
+  
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
@@ -340,10 +353,16 @@ if not (os.path.exists(file_path)):
     FROM
       especializacao
     """
-
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
 
+    # Adicionando as chaves 
+    query = """
+    ALTER TABLE Instituicao
+    ADD PRIMARY KEY (CODIGO_INSTITUICAO);
+    """
+    df = pd.read_sql_query(query, conn)
+  
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
@@ -365,16 +384,25 @@ if not (os.path.exists(file_path)):
     FROM
       especializacao
     """
-
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
 
+    # Adicionando as chaves estrangeiras
+    query = """
+    ALTER TABLE Local_Instituicao
+    ADD CONSTRAINT fk_instituicao
+        FOREIGN KEY (CODIGO_INSTITUICAO)
+        REFERENCES Instituicao(CODIGO_INSTITUICAO),
+    ADD CONSTRAINT fk_municipio
+        FOREIGN KEY (CODIGO_MUNICIPIO)
+        REFERENCES Municipio(CODIGO_MUNICIPIO);
+    """
+    df = pd.read_sql_query(query, conn)
+  
     #cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
-   # cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
+    #cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
 
     conn.commit()
-
-    print (df)
 
     cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
 
@@ -386,6 +414,36 @@ if not (os.path.exists(file_path)):
 
     cursor.execute("ALTER TABLE Instituicao RENAME COLUMN CODIGO_INSTITUICAO TO COD_INSTITUICAO;")
 
+    # Adicionando as chaves estrangeiras
+    query = """
+    ALTER TABLE Graduacao
+    ADD CONSTRAINT fk_instituicao
+        FOREIGN KEY (COD_INSTITUICAO)
+        REFERENCES Instituicao(CODIGO_INSTITUICAO),
+    ADD CONSTRAINT fk_tematica
+        FOREIGN KEY (COD_AREA_CONHECIMENTO)
+        REFERENCES Tematica(COD_AREA_CONHECIMENTO),
+    ADD CONSTRAINT fk_municipio
+        FOREIGN KEY (CODIGO_MUNICIPIO)
+        REFERENCES Municipio(CODIGO_MUNICIPIO);
+    """
+    df = pd.read_sql_query(query, conn)
+  
+    # Adicionando as chaves estrangeiras
+    query = """
+    ALTER TABLE Especializacao
+    ADD CONSTRAINT fk_instituicao
+        FOREIGN KEY (COD_INSTITUICAO)
+        REFERENCES Instituicao(CODIGO_INSTITUICAO),
+    ADD CONSTRAINT fk_tematica
+        FOREIGN KEY (COD_AREA_CONHECIMENTO)
+        REFERENCES Tematica(COD_AREA_CONHECIMENTO),
+    ADD CONSTRAINT fk_municipio
+        FOREIGN KEY (CODIGO_MUNICIPIO)
+        REFERENCES Municipio(CODIGO_MUNICIPIO);
+    """
+    df = pd.read_sql_query(query, conn)
+  
     conn.commit()
 else:
     conn = sqlite3.connect(file_path)
