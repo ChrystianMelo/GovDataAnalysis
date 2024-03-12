@@ -149,37 +149,48 @@ def consulta_10(conn):
     df = pd.read_sql_query(query, conn)
     return df
     
+
 def show_table_info(conn):
-    st.header('Informações das Tabelas Normalizadas')
+    try:
+        st.header('Informações das Tabelas Normalizadas')
 
-    tables_query = "SELECT name FROM sqlite_master WHERE type='table'"
-    tables_info = pd.read_sql_query(tables_query, conn)
+        tables_query = "SELECT name FROM sqlite_master WHERE type='table'"
+        tables_info = pd.read_sql_query(tables_query, conn)
 
-    st.subheader('Informações das Tabelas')
-    st.write(tables_info)
+        st.subheader('Informações das Tabelas')
+        st.write(tables_info)
+    
+    except sqlite3.DatabaseError as e:
+        st.error("Erro ao acessar o banco de dados:")
+        st.error(e)
 
 def show_views_info(conn):
-    st.header('Informações das Views')
+    try:
+        st.header('Informações das Views')
 
-    cursor = conn.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    tables = cursor.fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        tables = cursor.fetchall()
 
-    for table in tables:
-        st.subheader(f"Informações da Tabela: {table[0]}")
+        for table in tables:
+            st.subheader(f"Informações da Tabela: {table[0]}")
 
-        cursor.execute(f"PRAGMA table_info({table[0]});")
-        table_info = cursor.fetchall()
+            cursor.execute(f"PRAGMA table_info({table[0]});")
+            table_info = cursor.fetchall()
 
-        columns = []
-        for col in table_info:
-            columns.append({
-                'Nome da Coluna': col[1],
-                'Tipo de Dado': col[2]
-            })
+            columns = []
+            for col in table_info:
+                columns.append({
+                    'Nome da Coluna': col[1],
+                    'Tipo de Dado': col[2]
+                })
 
-        st.write(f"Colunas da Tabela {table[0]}:")
-        st.write(columns)
+            st.write(f"Colunas da Tabela {table[0]}:")
+            st.write(columns)
+    
+    except sqlite3.DatabaseError as e:
+        st.error("Erro ao acessar o banco de dados:")
+        st.error(e)
 
 def show_data_info():
     title_with_link = f'Informações sobre as Bases de Dados do [mec](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-ensino-superior)'
