@@ -277,7 +277,7 @@ if not (os.path.exists(file_path)):
 
     # Normalização
     cursor = conn.cursor()
-    
+
     query = """
     SELECT DISTINCT
       CODIGO_AREA_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, AREA_OCDE_CINE AS NOME_AREA_CONHECIMENTO
@@ -299,16 +299,36 @@ if not (os.path.exists(file_path)):
     ALTER TABLE Tematica
     ADD PRIMARY KEY (CODIGO_AREA_CONHECIMENTO);
     """
-    df = pd.read_sql_query(query, conn)
-    
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
+    cursor.execute(query)
 
-    #cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
+    # Criando novas tabelas para remover colunas
+    cursor.execute("""
+    CREATE TABLE Graduacao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Graduacao;
+    """)
+
+    cursor.execute("""
+    CREATE TABLE Especializacao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Especializacao;
+    """)
+
+    # Excluindo tabelas originais
+    cursor.execute("DROP TABLE Graduacao;")
+    cursor.execute("DROP TABLE Especializacao;")
+
+    # Renomeando as novas tabelas
+    cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
+    cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
-
-    print (df)
 
     query = """
     SELECT DISTINCT
@@ -329,19 +349,37 @@ if not (os.path.exists(file_path)):
     ALTER TABLE Municipio
     ADD PRIMARY KEY (CODIGO_MUNICIPIO);
     """
-    df = pd.read_sql_query(query, conn)
-  
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
+    cursor.execute(query)
 
-    #cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
-    #cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
-    #cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
+    # Criando novas tabelas para remover colunas
+    cursor.execute("""
+    CREATE TABLE Graduacao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Graduacao;
+    """)
+
+    cursor.execute("""
+    CREATE TABLE Especializacao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Especializacao;
+    """)
+
+    # Excluindo tabelas originais
+    cursor.execute("DROP TABLE Graduacao;")
+    cursor.execute("DROP TABLE Especializacao;")
+
+    # Renomeando as novas tabelas
+    cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
+    cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
 
-    print (df)
     query = """
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
@@ -361,17 +399,36 @@ if not (os.path.exists(file_path)):
     ALTER TABLE Instituicao
     ADD PRIMARY KEY (CODIGO_INSTITUICAO);
     """
-    df = pd.read_sql_query(query, conn)
-  
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
+    cursor.execute(query)
 
-    #cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
+    # Criando novas tabelas para remover colunas
+    cursor.execute("""
+    CREATE TABLE Graduacao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Graduacao;
+    """)
+
+    cursor.execute("""
+    CREATE TABLE Especializacao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Especializacao;
+    """)
+
+    # Excluindo tabelas originais
+    cursor.execute("DROP TABLE Graduacao;")
+    cursor.execute("DROP TABLE Especializacao;")
+
+    # Renomeando as novas tabelas
+    cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
+    cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
-
-    print (df)
 
     query = """
     SELECT DISTINCT
@@ -397,10 +454,7 @@ if not (os.path.exists(file_path)):
         FOREIGN KEY (CODIGO_MUNICIPIO)
         REFERENCES Municipio(CODIGO_MUNICIPIO);
     """
-    df = pd.read_sql_query(query, conn)
-  
-    #cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
-    #cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
+    cursor.execute(query)
 
     conn.commit()
 
