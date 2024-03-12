@@ -304,7 +304,7 @@ if (os.path.exists(file_path)):
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Tematica', conn, if_exists='replace', index=False)
-
+    
     # Adding primary key to Tematica table
     cursor.execute("CREATE UNIQUE INDEX idx_codigo_area_conhecimento ON Tematica (CODIGO_AREA_CONHECIMENTO)")
 
@@ -336,6 +336,7 @@ if (os.path.exists(file_path)):
     cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
+    st.title('10%')
 
     query = """
     SELECT DISTINCT
@@ -382,6 +383,7 @@ if (os.path.exists(file_path)):
     cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
+    st.title('30%')
 
     query = """
     SELECT DISTINCT
@@ -428,6 +430,7 @@ if (os.path.exists(file_path)):
     cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
+    st.title('50%')
 
     query = """
     SELECT DISTINCT
@@ -442,6 +445,8 @@ if (os.path.exists(file_path)):
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
+    
+    st.title('70%')
 
     # Adding foreign key constraints to Local_Instituicao table
     cursor.execute("""
@@ -477,6 +482,7 @@ if (os.path.exists(file_path)):
     cursor.execute("ALTER TABLE Local_Instituicao_New RENAME TO Local_Instituicao;")
 
     conn.commit()
+    st.title('95%')
 
     # Close the connection
     conn.close()
