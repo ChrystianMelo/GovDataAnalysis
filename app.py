@@ -6,7 +6,6 @@ import os
 import gdown
 import streamlit as st
 
-
 def downloadFile(file_path, url):
   if not (os.path.exists(file_path)):
       gdown.download(url, file_path, quiet=False)
@@ -283,26 +282,22 @@ if not (os.path.exists(file_path)):
     SELECT DISTINCT
       CODIGO_AREA_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, AREA_OCDE_CINE AS NOME_AREA_CONHECIMENTO
     FROM
-      graduacao
+      Graduacao
     GROUP BY CODIGO_AREA_CONHECIMENTO
     UNION
     SELECT DISTINCT
       CODIGO_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, OCDE_CINE AS NOME_AREA_CONHECIMENTO
     FROM
-      especializacao
+      Especializacao
     GROUP BY CODIGO_AREA_CONHECIMENTO
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Tematica', conn, if_exists='replace', index=False)
 
-    # Adicionando as chaves
-    query = """
-    ALTER TABLE Tematica
-    ADD PRIMARY KEY (CODIGO_AREA_CONHECIMENTO);
-    """
-    cursor.execute(query)
+    # Adding primary key to Tematica table
+    cursor.execute("CREATE UNIQUE INDEX idx_codigo_area_conhecimento ON Tematica (CODIGO_AREA_CONHECIMENTO)")
 
-    # Criando novas tabelas para remover colunas
+    # Creating new tables to remove columns
     cursor.execute("""
     CREATE TABLE Graduacao_New AS
     SELECT
@@ -321,11 +316,11 @@ if not (os.path.exists(file_path)):
     FROM Especializacao;
     """)
 
-    # Excluindo tabelas originais
+    # Dropping original tables
     cursor.execute("DROP TABLE Graduacao;")
     cursor.execute("DROP TABLE Especializacao;")
 
-    # Renomeando as novas tabelas
+    # Renaming the new tables
     cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
     cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
@@ -335,24 +330,20 @@ if not (os.path.exists(file_path)):
     SELECT DISTINCT
       CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
     FROM
-      graduacao
+      Graduacao
     UNION
     SELECT DISTINCT
       CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
     FROM
-      especializacao
+      Especializacao
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Municipio', conn, if_exists='replace', index=False)
 
-    # Adicionando as chaves
-    query = """
-    ALTER TABLE Municipio
-    ADD PRIMARY KEY (CODIGO_MUNICIPIO);
-    """
-    cursor.execute(query)
+    # Adding primary key to Municipio table
+    cursor.execute("CREATE UNIQUE INDEX idx_codigo_municipio ON Municipio (CODIGO_MUNICIPIO)")
 
-    # Criando novas tabelas para remover colunas
+    # Creating new tables to remove columns
     cursor.execute("""
     CREATE TABLE Graduacao_New AS
     SELECT
@@ -371,11 +362,11 @@ if not (os.path.exists(file_path)):
     FROM Especializacao;
     """)
 
-    # Excluindo tabelas originais
+    # Dropping original tables
     cursor.execute("DROP TABLE Graduacao;")
     cursor.execute("DROP TABLE Especializacao;")
 
-    # Renomeando as novas tabelas
+    # Renaming the new tables
     cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
     cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
@@ -385,24 +376,20 @@ if not (os.path.exists(file_path)):
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
     FROM
-      graduacao
+      Graduacao
     UNION
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
     FROM
-      especializacao
+      Especializacao
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
 
-    # Adicionando as chaves 
-    query = """
-    ALTER TABLE Instituicao
-    ADD PRIMARY KEY (CODIGO_INSTITUICAO);
-    """
-    cursor.execute(query)
+    # Adding primary key to Instituicao table
+    cursor.execute("CREATE UNIQUE INDEX idx_codigo_instituicao ON Instituicao (CODIGO_INSTITUICAO)")
 
-    # Criando novas tabelas para remover colunas
+    # Creating new tables to remove columns
     cursor.execute("""
     CREATE TABLE Graduacao_New AS
     SELECT
@@ -421,11 +408,11 @@ if not (os.path.exists(file_path)):
     FROM Especializacao;
     """)
 
-    # Excluindo tabelas originais
+    # Dropping original tables
     cursor.execute("DROP TABLE Graduacao;")
     cursor.execute("DROP TABLE Especializacao;")
 
-    # Renomeando as novas tabelas
+    # Renaming the new tables
     cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
     cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
@@ -435,71 +422,53 @@ if not (os.path.exists(file_path)):
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
     FROM
-      graduacao
+      Graduacao
     UNION
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
     FROM
-      especializacao
+      Especializacao
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
 
-    # Adicionando as chaves estrangeiras
-    query = """
-    ALTER TABLE Local_Instituicao
-    ADD CONSTRAINT fk_instituicao
-        FOREIGN KEY (CODIGO_INSTITUICAO)
-        REFERENCES Instituicao(CODIGO_INSTITUICAO),
-    ADD CONSTRAINT fk_municipio
-        FOREIGN KEY (CODIGO_MUNICIPIO)
-        REFERENCES Municipio(CODIGO_MUNICIPIO);
-    """
-    cursor.execute(query)
+    # Adding foreign key constraints to Local_Instituicao table
+    cursor.execute("""
+    CREATE UNIQUE INDEX idx_local_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO, CODIGO_MUNICIPIO);
+    """)
+
+    cursor.execute("""
+    CREATE INDEX idx_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
+    """)
+
+    cursor.execute("""
+    CREATE INDEX idx_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
+    """)
+
+    cursor.execute("""
+    CREATE UNIQUE INDEX idx_local_instituicao_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
+    """)
+
+    cursor.execute("""
+    CREATE UNIQUE INDEX idx_local_instituicao_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
+    """)
+
+    cursor.execute("""
+    CREATE TABLE Local_Instituicao_New AS
+    SELECT
+        COLUNA1,
+        COLUNA2,
+        ...
+    FROM Local_Instituicao;
+    """)
+
+    cursor.execute("DROP TABLE Local_Instituicao;")
+    cursor.execute("ALTER TABLE Local_Instituicao_New RENAME TO Local_Instituicao;")
 
     conn.commit()
 
-    cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
-
-    cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
-
-    cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
-
-    cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_AREA_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
-
-    cursor.execute("ALTER TABLE Instituicao RENAME COLUMN CODIGO_INSTITUICAO TO COD_INSTITUICAO;")
-
-    # Adicionando as chaves estrangeiras
-    query = """
-    ALTER TABLE Graduacao
-    ADD CONSTRAINT fk_instituicao
-        FOREIGN KEY (COD_INSTITUICAO)
-        REFERENCES Instituicao(CODIGO_INSTITUICAO),
-    ADD CONSTRAINT fk_tematica
-        FOREIGN KEY (COD_AREA_CONHECIMENTO)
-        REFERENCES Tematica(COD_AREA_CONHECIMENTO),
-    ADD CONSTRAINT fk_municipio
-        FOREIGN KEY (CODIGO_MUNICIPIO)
-        REFERENCES Municipio(CODIGO_MUNICIPIO);
-    """
-    df = pd.read_sql_query(query, conn)
-  
-    # Adicionando as chaves estrangeiras
-    query = """
-    ALTER TABLE Especializacao
-    ADD CONSTRAINT fk_instituicao
-        FOREIGN KEY (COD_INSTITUICAO)
-        REFERENCES Instituicao(CODIGO_INSTITUICAO),
-    ADD CONSTRAINT fk_tematica
-        FOREIGN KEY (COD_AREA_CONHECIMENTO)
-        REFERENCES Tematica(COD_AREA_CONHECIMENTO),
-    ADD CONSTRAINT fk_municipio
-        FOREIGN KEY (CODIGO_MUNICIPIO)
-        REFERENCES Municipio(CODIGO_MUNICIPIO);
-    """
-    df = pd.read_sql_query(query, conn)
-  
-    conn.commit()
+    # Close the connection
+    conn.close()
 else:
     conn = sqlite3.connect(file_path)
 
