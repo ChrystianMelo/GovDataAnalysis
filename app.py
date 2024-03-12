@@ -272,13 +272,13 @@ def show_consultas(conn):
             st.dataframe(df_consulta_10)
 
 file_path = "mecData.db"
-if (os.path.exists(file_path)):
-    #downloadFile("graduacao.csv", "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
+if not (os.path.exists(file_path)):
+    downloadFile("graduacao.csv", "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
     graduacao =  pd.read_csv("graduacao.csv")
 
     # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
     # downloadFile("especializacao.csv", "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
-    #downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
+    downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
     especializacao = pd.read_csv("especializacao.csv")
 
     conn = sqlite3.connect(file_path)
