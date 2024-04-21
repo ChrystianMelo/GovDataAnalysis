@@ -272,15 +272,19 @@ def show_consultas(conn):
             st.dataframe(df_consulta_10)
 
 file_path = "mecData.db"
-#if not (os.path.exists(file_path)):
-if (1==1):
-    downloadFile("graduacao.csv", "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
-    graduacao =  pd.read_csv("graduacao.csv")
+os.remove(file_path)
+if not (os.path.exists(file_path)):
+    graduacao_path = "graduacao.csv"
+    if not (os.path.exists(graduacao_path)):
+        downloadFile(graduacao_path, "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
+    graduacao =  pd.read_csv(graduacao_path)
 
-    # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
-    downloadFile("especializacao.csv", "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
-    #downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
-    especializacao = pd.read_csv("especializacao.csv")
+    especializacao_path = "especializacao.csv"
+    if not (os.path.exists(especializacao_path)):
+        # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
+        downloadFile(especializacao_path, "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
+        #downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
+    especializacao = pd.read_csv(especializacao_path)
     
     conn = sqlite3.connect(file_path)
 
@@ -346,24 +350,8 @@ if (1==1):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
     
-    # Verificar duplicatas na coluna CODIGO_INSTITUICAO
-    cursor.execute("""
-        SELECT CODIGO_INSTITUICAO, COUNT(*)
-        FROM Instituicao
-        GROUP BY CODIGO_INSTITUICAO
-        HAVING COUNT(*) > 1
-    """)
-    duplicates = cursor.fetchall()
-    if duplicates:
-        print("Duplicatas encontradas!")        
-        # Remover duplicatas
-        for duplicate in duplicates:
-            codigo = duplicate[0]
-            cursor.execute("DELETE FROM Instituicao WHERE rowid NOT IN (SELECT MIN(rowid) FROM Instituicao WHERE CODIGO_INSTITUICAO = ?)", (codigo,))
-        print("Duplicatas removidas.")
-
     # Adding primary key to Municipio table
-    cursor.execute("CREATE UNIQUE INDEX idx_codigo_instituicao ON Instituicao (CODIGO_INSTITUICAO)")
+    # cursor.execute("CREATE UNIQUE INDEX idx_codigo_instituicao ON Instituicao (CODIGO_INSTITUICAO)")
 
     conn.commit()
     st.title('50%')
@@ -388,48 +376,24 @@ if (1==1):
     """)
 
     st.title('70%')
-
     cursor.execute("""
     CREATE INDEX idx_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
     """)
 
     st.title('75%')
-
     cursor.execute("""
     CREATE INDEX idx_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
     """)
 
     st.title('80%')
-
-    # Verificar duplicatas na coluna CODIGO_INSTITUICAO
-    cursor.execute("""
-        SELECT CODIGO_INSTITUICAO, COUNT(*)
-        FROM Local_Instituicao
-        GROUP BY CODIGO_INSTITUICAO
-        HAVING COUNT(*) > 1
-    """)
-    duplicates = cursor.fetchall()
-    if duplicates:
-        print("Duplicatas encontradas!")        
-        # Remover duplicatas
-        for duplicate in duplicates:
-            codigo = duplicate[0]
-            cursor.execute("DELETE FROM Local_Instituicao WHERE rowid NOT IN (SELECT MIN(rowid) FROM Local_Instituicao WHERE CODIGO_INSTITUICAO = ?)", (codigo,))
-        print("Duplicatas removidas.")
-
-    cursor.execute("""
-    CREATE UNIQUE INDEX idx_local_instituicao_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
-    """)
+    #cursor.execute("""CREATE UNIQUE INDEX idx_local_instituicao_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);""")
 
     st.title('85%')
-    cursor.execute("""
-    CREATE UNIQUE INDEX idx_local_instituicao_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
-    """)
+    #cursor.execute("""CREATE UNIQUE INDEX idx_local_instituicao_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);""")
 
     st.title('90%')
 
     conn.commit()
-    st.title('95%')
 
     st.title('100%')
 else:
