@@ -278,10 +278,10 @@ if (1==1):
     graduacao =  pd.read_csv("graduacao.csv")
 
     # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
-    # downloadFile("especializacao.csv", "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
+    #downloadFile("especializacao.csv", "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
     #downloadFile("especializacao.csv", "https://drive.usercontent.google.com/download?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0&export=download&authuser=2&confirm=t&uuid=0ac2db66-0856-42bf-95e1-aa784e7e81c3&at=APZUnTVkI1R4coEJVVDmKx9zBIRW:1700768753058")
     especializacao = pd.read_csv("especializacao.csv")
-
+    
     conn = sqlite3.connect(file_path)
 
     graduacao.to_sql('Graduacao', conn, if_exists='replace', index=False)
@@ -309,33 +309,6 @@ if (1==1):
     # Adding primary key to Tematica table
     cursor.execute("CREATE UNIQUE INDEX idx_codigo_area_conhecimento ON Tematica (CODIGO_AREA_CONHECIMENTO)")
 
-    # Creating new tables to remove columns
-    cursor.execute("""
-    CREATE TABLE Graduacao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Graduacao;
-    """)
-
-    cursor.execute("""
-    CREATE TABLE Especializacao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Especializacao;
-    """)
-
-    # Dropping original tables
-    cursor.execute("DROP TABLE Graduacao;")
-    cursor.execute("DROP TABLE Especializacao;")
-
-    # Renaming the new tables
-    cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
-    cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
-
     conn.commit()
     st.title('10%')
 
@@ -356,33 +329,6 @@ if (1==1):
     # Adding primary key to Municipio table
     cursor.execute("CREATE UNIQUE INDEX idx_codigo_municipio ON Municipio (CODIGO_MUNICIPIO)")
 
-    # Creating new tables to remove columns
-    cursor.execute("""
-    CREATE TABLE Graduacao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Graduacao;
-    """)
-
-    cursor.execute("""
-    CREATE TABLE Especializacao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Especializacao;
-    """)
-
-    # Dropping original tables
-    cursor.execute("DROP TABLE Graduacao;")
-    cursor.execute("DROP TABLE Especializacao;")
-
-    # Renaming the new tables
-    cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
-    cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
-
     conn.commit()
     st.title('30%')
 
@@ -399,36 +345,25 @@ if (1==1):
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
+    
+    # Verificar duplicatas na coluna CODIGO_INSTITUICAO
+    cursor.execute("""
+        SELECT CODIGO_INSTITUICAO, COUNT(*)
+        FROM Instituicao
+        GROUP BY CODIGO_INSTITUICAO
+        HAVING COUNT(*) > 1
+    """)
+    duplicates = cursor.fetchall()
+    if duplicates:
+        print("Duplicatas encontradas!")        
+        # Remover duplicatas
+        for duplicate in duplicates:
+            codigo = duplicate[0]
+            cursor.execute("DELETE FROM Instituicao WHERE rowid NOT IN (SELECT MIN(rowid) FROM Instituicao WHERE CODIGO_INSTITUICAO = ?)", (codigo,))
+        print("Duplicatas removidas.")
 
-    # Adding primary key to Instituicao table
+    # Adding primary key to Municipio table
     cursor.execute("CREATE UNIQUE INDEX idx_codigo_instituicao ON Instituicao (CODIGO_INSTITUICAO)")
-
-    # Creating new tables to remove columns
-    cursor.execute("""
-    CREATE TABLE Graduacao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Graduacao;
-    """)
-
-    cursor.execute("""
-    CREATE TABLE Especializacao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Especializacao;
-    """)
-
-    # Dropping original tables
-    cursor.execute("DROP TABLE Graduacao;")
-    cursor.execute("DROP TABLE Especializacao;")
-
-    # Renaming the new tables
-    cursor.execute("ALTER TABLE Graduacao_New RENAME TO Graduacao;")
-    cursor.execute("ALTER TABLE Especializacao_New RENAME TO Especializacao;")
 
     conn.commit()
     st.title('50%')
@@ -447,46 +382,58 @@ if (1==1):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
     
-    st.title('70%')
-
     # Adding foreign key constraints to Local_Instituicao table
     cursor.execute("""
     CREATE UNIQUE INDEX idx_local_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO, CODIGO_MUNICIPIO);
     """)
 
+    st.title('70%')
+
     cursor.execute("""
     CREATE INDEX idx_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
     """)
+
+    st.title('75%')
 
     cursor.execute("""
     CREATE INDEX idx_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
     """)
 
+    st.title('80%')
+
+    # Verificar duplicatas na coluna CODIGO_INSTITUICAO
+    cursor.execute("""
+        SELECT CODIGO_INSTITUICAO, COUNT(*)
+        FROM Local_Instituicao
+        GROUP BY CODIGO_INSTITUICAO
+        HAVING COUNT(*) > 1
+    """)
+    duplicates = cursor.fetchall()
+    if duplicates:
+        print("Duplicatas encontradas!")        
+        # Remover duplicatas
+        for duplicate in duplicates:
+            codigo = duplicate[0]
+            cursor.execute("DELETE FROM Local_Instituicao WHERE rowid NOT IN (SELECT MIN(rowid) FROM Local_Instituicao WHERE CODIGO_INSTITUICAO = ?)", (codigo,))
+        print("Duplicatas removidas.")
+
     cursor.execute("""
     CREATE UNIQUE INDEX idx_local_instituicao_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
     """)
 
+    st.title('85%')
     cursor.execute("""
     CREATE UNIQUE INDEX idx_local_instituicao_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
     """)
 
-    cursor.execute("""
-    CREATE TABLE Local_Instituicao_New AS
-    SELECT
-        COLUNA1,
-        COLUNA2,
-        ...
-    FROM Local_Instituicao;
-    """)
-
-    cursor.execute("DROP TABLE Local_Instituicao;")
-    cursor.execute("ALTER TABLE Local_Instituicao_New RENAME TO Local_Instituicao;")
+    st.title('90%')
 
     conn.commit()
     st.title('95%')
 
     # Close the connection
     conn.close()
+    st.title('100%')
 else:
     conn = sqlite3.connect(file_path)
 
