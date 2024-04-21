@@ -431,8 +431,6 @@ if (1==1):
     conn.commit()
     st.title('95%')
 
-    # Close the connection
-    conn.close()
     st.title('100%')
 else:
     conn = sqlite3.connect(file_path)
