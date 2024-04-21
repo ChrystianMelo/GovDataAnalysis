@@ -272,8 +272,8 @@ def show_consultas(conn):
             st.dataframe(df_consulta_10)
 
 file_path = "mecData.db"
-os.remove(file_path)
-if not (os.path.exists(file_path)):
+#if not (os.path.exists(file_path)):
+if (1==1):
     graduacao_path = "graduacao.csv"
     if not (os.path.exists(graduacao_path)):
         downloadFile(graduacao_path, "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
