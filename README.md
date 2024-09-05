@@ -28,7 +28,7 @@ Download the [data](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre
 ## Contact
 
 For questions or further information, get in touch with: <br>
-[Chrystian Melo](mailto:meloo.chrys@gmail.com) <br>
+[Chrystian Melo](https://github.com/chrystianmelo) <br>
 Fernando Coutinho<br>
-Murillo Ribeiro<br>
+[Murillo Ribeiro](https://github.com/rbmuri)<br>
 Nauan Barbosa
