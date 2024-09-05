@@ -279,6 +279,7 @@ if not (os.path.exists(file_path)):
     graduacao =  pd.read_csv(graduacao_path)
 
     especializacao_path = "especializacao.csv"
+    os.remove(especializacao_path)
     #if not (os.path.exists(especializacao_path)):
         # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
         #downloadFile(especializacao_path, "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
