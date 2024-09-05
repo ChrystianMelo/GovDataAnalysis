@@ -271,7 +271,7 @@ def show_consultas(conn):
             df_consulta_10 = consulta_10(conn)
             st.dataframe(df_consulta_10)
 
-file_path = "mecData.db"
+file_path = "mecData.db" 
 if (os.path.exists(file_path)):
     graduacao_path = "graduacao.csv"
     if not (os.path.exists(graduacao_path)):
