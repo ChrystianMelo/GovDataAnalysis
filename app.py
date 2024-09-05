@@ -282,7 +282,7 @@ if not (os.path.exists(file_path)):
     #if not (os.path.exists(especializacao_path)):
         # O site do mec demora muito para carregar, então vou baixar a partir do meu driver pessoal.
         #downloadFile(especializacao_path, "https://olinda.mec.gov.br/olinda-ide/servico/PDA_SERES/versao/v1/odata/PDA_Cursos_Especializacao_Brasil?$format=text/csv")
-    downloadFile("especializacao.csv", "https://drive.google.com/file/d/15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0/view?usp=drive_link")
+    downloadFile("especializacao.csv", "https://drive.google.com/uc?id=15Mgq9U3C6775p5AoLdKBmP1-AmiC24_0")
     especializacao = pd.read_csv(especializacao_path)
     
     conn = sqlite3.connect(file_path)
