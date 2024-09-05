@@ -290,111 +290,268 @@ if not (os.path.exists(file_path)):
     graduacao.to_sql('Graduacao', conn, if_exists='replace', index=False)
     especializacao.to_sql('Especializacao', conn, if_exists='replace', index=False)
 
-    # Normalização
+    """## Normalização 1"""
+
     cursor = conn.cursor()
 
     query = """
     SELECT DISTINCT
       CODIGO_AREA_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, AREA_OCDE_CINE AS NOME_AREA_CONHECIMENTO
     FROM
-      Graduacao
+      graduacao
     GROUP BY CODIGO_AREA_CONHECIMENTO
     UNION
     SELECT DISTINCT
       CODIGO_OCDE_CINE AS CODIGO_AREA_CONHECIMENTO, OCDE_CINE AS NOME_AREA_CONHECIMENTO
     FROM
-      Especializacao
+      especializacao
     GROUP BY CODIGO_AREA_CONHECIMENTO
     """
     df = pd.read_sql_query(query, conn)
     df.to_sql('Tematica', conn, if_exists='replace', index=False)
-    
-    # Adding primary key to Tematica table
-    cursor.execute("CREATE UNIQUE INDEX idx_codigo_area_conhecimento ON Tematica (CODIGO_AREA_CONHECIMENTO)")
+
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
+
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
 
     conn.commit()
-    st.title('10%')
+
+    print (df)
 
     query = """
     SELECT DISTINCT
       CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
     FROM
-      Graduacao
+      graduacao
     UNION
     SELECT DISTINCT
       CODIGO_MUNICIPIO, MUNICIPIO AS NOME_MUNICIPIO, UF, REGIAO
     FROM
-      Especializacao
+      especializacao
     """
+
     df = pd.read_sql_query(query, conn)
     df.to_sql('Municipio', conn, if_exists='replace', index=False)
 
-    # Adding primary key to Municipio table
-    cursor.execute("CREATE UNIQUE INDEX idx_codigo_municipio ON Municipio (CODIGO_MUNICIPIO)")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
+
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
 
     conn.commit()
-    st.title('30%')
+
+    print (df)
 
     query = """
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
     FROM
-      Graduacao
+      graduacao
     UNION
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, NOME_IES AS NOME_INSTITUICAO
     FROM
-      Especializacao
+      especializacao
     """
+
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
-    
-    # Adding primary key to Municipio table
-    # cursor.execute("CREATE UNIQUE INDEX idx_codigo_instituicao ON Instituicao (CODIGO_INSTITUICAO)")
+
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
+
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
 
     conn.commit()
-    st.title('50%')
+
+    print (df)
 
     query = """
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
     FROM
-      Graduacao
+      graduacao
     UNION
     SELECT DISTINCT
       CODIGO_IES AS CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
     FROM
-      Especializacao
+      especializacao
     """
+
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
-    
-    # Adding foreign key constraints to Local_Instituicao table
-    cursor.execute("""
-    CREATE UNIQUE INDEX idx_local_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO, CODIGO_MUNICIPIO);
-    """)
 
-    st.title('70%')
-    cursor.execute("""
-    CREATE INDEX idx_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);
-    """)
-
-    st.title('75%')
-    cursor.execute("""
-    CREATE INDEX idx_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);
-    """)
-
-    st.title('80%')
-    #cursor.execute("""CREATE UNIQUE INDEX idx_local_instituicao_fk_instituicao ON Local_Instituicao (CODIGO_INSTITUICAO);""")
-
-    st.title('85%')
-    #cursor.execute("""CREATE UNIQUE INDEX idx_local_instituicao_fk_municipio ON Local_Instituicao (CODIGO_MUNICIPIO);""")
-
-    st.title('90%')
+    cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
+    cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
 
     conn.commit()
 
-    st.title('100%')
+    print (df)
+
+    cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
+
+    cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_IES TO COD_INSTITUICAO;")
+
+    cursor.execute("ALTER TABLE Especializacao RENAME COLUMN CODIGO_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
+
+    cursor.execute("ALTER TABLE Graduacao RENAME COLUMN CODIGO_AREA_OCDE_CINE TO COD_AREA_CONHECIMENTO;")
+
+    cursor.execute("ALTER TABLE Instituicao RENAME COLUMN CODIGO_INSTITUICAO TO COD_INSTITUICAO;")
+
+    conn.commit()
+
+    """## Normalização 2"""
+
+    # Criar a tabela Graduacao com as chaves primária e estrangeiras
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Graduacao_new (
+            COD_INSTITUICAO INTEGER,
+            CODIGO_CURSO INTEGER,
+            NOME_CURSO TEXT,
+            GRAU TEXT,
+            MODALIDADE TEXT,
+            SITUACAO_CURSO TEXT,
+            QT_VAGAS_AUTORIZADAS INTEGER,
+            CARGA_HORARIA INTEGER,
+            COD_AREA_CONHECIMENTO TEXT,
+            PRIMARY KEY (CODIGO_CURSO),
+            FOREIGN KEY (COD_INSTITUICAO) REFERENCES Instituicao(COD_INSTITUICAO),
+            FOREIGN KEY (COD_AREA_CONHECIMENTO) REFERENCES Tematica(CODIGO_AREA_CONHECIMENTO)
+        )
+    ''')
+
+    # Copiar dados da tabela Graduacao, IGNORANDO DUPLICATAS
+    cursor.execute('''
+        INSERT INTO Graduacao_new
+        SELECT DISTINCT COD_INSTITUICAO, CODIGO_CURSO, NOME_CURSO, GRAU, MODALIDADE,
+               SITUACAO_CURSO, QT_VAGAS_AUTORIZADAS, CARGA_HORARIA, COD_AREA_CONHECIMENTO
+        FROM Graduacao
+    ''')
+
+    conn.commit()
+
+    # Criar a tabela Especializacao com chaves primária e estrangeiras
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Especializacao_new (
+            COD_INSTITUICAO INTEGER,
+            COD_DA_ESPECIALIZACAO INTEGER,
+            NOME_ESPECIALIZACAO TEXT,
+            COD_AREA_CONHECIMENTO REAL,
+            CARGA_HORARIA INTEGER,
+            DURACAO_MESES INTEGER,
+            MODALIDADE TEXT,
+            VAGAS INTEGER,
+            SITUACAO TEXT,
+            PRIMARY KEY (COD_DA_ESPECIALIZACAO),
+            FOREIGN KEY (COD_INSTITUICAO) REFERENCES Instituicao(COD_INSTITUICAO),
+            FOREIGN KEY (COD_AREA_CONHECIMENTO) REFERENCES Tematica(CODIGO_AREA_CONHECIMENTO)
+        )
+    ''')
+
+    # Copiar dados da tabela Especializacao, IGNORANDO DUPLICATAS
+    cursor.execute('''
+        INSERT INTO Especializacao_new
+        SELECT DISTINCT COD_INSTITUICAO, COD_DA_ESPECIALIZACAO, NOME_ESPECIALIZACAO,
+               COD_AREA_CONHECIMENTO, CARGA_HORARIA, DURACAO_MESES, MODALIDADE, VAGAS, SITUACAO
+        FROM Especializacao
+    ''')
+    conn.commit()
+
+    # Criar a tabela Tematica com chave primária
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Tematica_new (
+            CODIGO_AREA_CONHECIMENTO TEXT PRIMARY KEY,
+            NOME_AREA_CONHECIMENTO TEXT
+        )
+    ''')
+
+    # Copiar dados da tabela Tematica
+    cursor.execute('''
+        INSERT INTO Tematica_new
+        SELECT DISTINCT CODIGO_AREA_CONHECIMENTO, NOME_AREA_CONHECIMENTO
+        FROM Tematica
+    ''')
+    conn.commit()
+
+    # Criar a tabela Municipio com chave primária
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Municipio_new (
+            CODIGO_MUNICIPIO INTEGER PRIMARY KEY,
+            NOME_MUNICIPIO TEXT,
+            UF TEXT,
+            REGIAO TEXT
+        )
+    ''')
+
+    # Copiar dados da tabela Municipio, IGNORANDO DUPLICATAS
+    cursor.execute('''
+        INSERT INTO Municipio_new
+        SELECT DISTINCT CODIGO_MUNICIPIO, NOME_MUNICIPIO, UF, REGIAO
+        FROM Municipio
+    ''')
+    conn.commit()
+
+    # Criar a tabela Instituicao com chave primária
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Instituicao_new (
+            COD_INSTITUICAO INTEGER PRIMARY KEY,
+            NOME_INSTITUICAO TEXT
+        )
+    ''')
+
+    # Copiar dados da tabela Instituicao, mantendo um único registro para cada COD_INSTITUICAO
+    cursor.execute('''
+        INSERT INTO Instituicao_new
+        SELECT COD_INSTITUICAO, MAX(NOME_INSTITUICAO)
+        FROM Instituicao
+        GROUP BY COD_INSTITUICAO
+    ''')
+
+    conn.commit()
+
+    # Criar a tabela Local_Instituicao com chaves primária e estrangeiras
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Local_Instituicao_new (
+            CODIGO_INSTITUICAO INTEGER,
+            CODIGO_MUNICIPIO INTEGER,
+            PRIMARY KEY (CODIGO_INSTITUICAO, CODIGO_MUNICIPIO),
+            FOREIGN KEY (CODIGO_INSTITUICAO) REFERENCES Instituicao(COD_INSTITUICAO),
+            FOREIGN KEY (CODIGO_MUNICIPIO) REFERENCES Municipio(CODIGO_MUNICIPIO)
+        )
+    ''')
+
+    # Copiar dados da tabela Local_Instituicao, IGNORANDO DUPLICATAS
+    cursor.execute('''
+        INSERT INTO Local_Instituicao_new
+        SELECT DISTINCT CODIGO_INSTITUICAO, CODIGO_MUNICIPIO
+        FROM Local_Instituicao
+    ''')
+
+    conn.commit()
+
+    # Excluir as tabelas antigas
+    cursor.execute('DROP TABLE IF EXISTS Graduacao')
+    cursor.execute('DROP TABLE IF EXISTS Especializacao')
+    cursor.execute('DROP TABLE IF EXISTS Tematica')
+    cursor.execute('DROP TABLE IF EXISTS Municipio')
+    cursor.execute('DROP TABLE IF EXISTS Instituicao')
+    cursor.execute('DROP TABLE IF EXISTS Local_Instituicao')
+
+    # Renomear as novas tabelas para os nomes originais
+    cursor.execute('ALTER TABLE Graduacao_new RENAME TO Graduacao')
+    cursor.execute('ALTER TABLE Especializacao_new RENAME TO Especializacao')
+    cursor.execute('ALTER TABLE Tematica_new RENAME TO Tematica')
+    cursor.execute('ALTER TABLE Municipio_new RENAME TO Municipio')
+    cursor.execute('ALTER TABLE Instituicao_new RENAME TO Instituicao')
+    cursor.execute('ALTER TABLE Local_Instituicao_new RENAME TO Local_Instituicao')
+
+    # Commitar as mudanças
+    conn.commit()
 else:
     conn = sqlite3.connect(file_path)
 
