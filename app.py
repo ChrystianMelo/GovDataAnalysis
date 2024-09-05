@@ -272,6 +272,7 @@ def show_consultas(conn):
             st.dataframe(df_consulta_10)
 
 file_path = "mecData.db"
+os.remove(file_path)
 if not (os.path.exists(file_path)):
     graduacao_path = "graduacao.csv"
     if not (os.path.exists(graduacao_path)):
