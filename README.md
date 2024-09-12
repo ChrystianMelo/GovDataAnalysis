@@ -24,7 +24,7 @@ Execute the [project notebook](https://github.com/ChrystianMelo/GovDataAnalysis/
 
 ### Results
 
-Explore the visualizations and analyses on the [GovDataAnalysis Platform](https://govdataanalysis.streamlit.app/),, though note that due to Streamlit's limitations, queries may be slower; for faster performance, running the notebook independently is recommended.
+Explore the visualizations and analyses on the [GovDataAnalysis Platform](https://govdataanalysis.streamlit.app/),, though note that due to Streamlit's limitations, queries may be slower; for faster performance, running the [notebook](https://github.com/ChrystianMelo/GovDataAnalysis/blob/main/Project.ipynb) independently is recommended.
 
 ### Contact
 
