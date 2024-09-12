@@ -272,7 +272,7 @@ def show_consultas(conn):
             st.dataframe(df_consulta_10)
 
 file_path = "mecData.db" 
-if not (os.path.exists(file_path)):
+if (os.path.exists(file_path)):
     graduacao_path = "graduacao.csv"
     if not (os.path.exists(graduacao_path)):
         downloadFile(graduacao_path, "https://dadosabertos.mec.gov.br/images/conteudo/Ind-ensino-superior/2022//PDA_Dados_Cursos_Graduacao_Brasil.csv")
@@ -310,12 +310,16 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Tematica', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
-
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
-
-    conn.commit()
+    # Tente executar os comandos de DROP
+    try:
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE_CINE;")
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN AREA_OCDE;") #coluna com dado duplicado
+    
+        cursor.execute("ALTER TABLE especializacao DROP COLUMN OCDE_CINE;")
+    except sqlite3.OperationalError as e:
+        print(f"Erro ao executar o comando DROP: {e}")
+    finally:
+        conn.commit()
 
     print (df)
 
@@ -334,15 +338,19 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Municipio', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
-
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
-
-    conn.commit()
+    # Tente executar os comandos de DROP
+    try:
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN MUNICIPIO;")
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN UF;")
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN REGIAO;")
+    
+        cursor.execute("ALTER TABLE especializacao DROP COLUMN MUNICIPIO;")
+        cursor.execute("ALTER TABLE especializacao DROP COLUMN UF;")
+        cursor.execute("ALTER TABLE especializacao DROP COLUMN REGIAO;")
+    except sqlite3.OperationalError as e:
+        print(f"Erro ao executar o comando DROP: {e}")
+    finally:
+        conn.commit()
 
     print (df)
 
@@ -361,13 +369,17 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Instituicao', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
-
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
-
-    conn.commit()
+    # Tente executar os comandos de DROP
+    try:
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN NOME_IES;")
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN CATEGORIA_ADMINISTRATIVA;")
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN ORGANIZACAO_ACADEMICA;")
+    
+        cursor.execute("ALTER TABLE especializacao DROP COLUMN NOME_IES;")
+    except sqlite3.OperationalError as e:
+        print(f"Erro ao executar o comando DROP: {e}")
+    finally:
+        conn.commit()
 
     print (df)
 
@@ -386,10 +398,14 @@ if not (os.path.exists(file_path)):
     df = pd.read_sql_query(query, conn)
     df.to_sql('Local_Instituicao', conn, if_exists='replace', index=False)
 
-    cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
-    cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
-
-    conn.commit()
+    # Tente executar os comandos de DROP
+    try:
+        cursor.execute("ALTER TABLE graduacao DROP COLUMN CODIGO_MUNICIPIO;")
+        cursor.execute("ALTER TABLE especializacao DROP COLUMN CODIGO_MUNICIPIO;")
+    except sqlite3.OperationalError as e:
+        print(f"Erro ao executar o comando DROP: {e}")
+    finally:
+        conn.commit()
 
     print (df)
 
@@ -534,14 +550,18 @@ if not (os.path.exists(file_path)):
 
     conn.commit()
 
-    # Excluir as tabelas antigas
-    cursor.execute('DROP TABLE IF EXISTS Graduacao')
-    cursor.execute('DROP TABLE IF EXISTS Especializacao')
-    cursor.execute('DROP TABLE IF EXISTS Tematica')
-    cursor.execute('DROP TABLE IF EXISTS Municipio')
-    cursor.execute('DROP TABLE IF EXISTS Instituicao')
-    cursor.execute('DROP TABLE IF EXISTS Local_Instituicao')
-
+    # Tente executar os comandos de DROP
+    try:
+        # Excluir as tabelas antigas
+        cursor.execute('DROP TABLE IF EXISTS Graduacao')
+        cursor.execute('DROP TABLE IF EXISTS Especializacao')
+        cursor.execute('DROP TABLE IF EXISTS Tematica')
+        cursor.execute('DROP TABLE IF EXISTS Municipio')
+        cursor.execute('DROP TABLE IF EXISTS Instituicao')
+        cursor.execute('DROP TABLE IF EXISTS Local_Instituicao')
+    except sqlite3.OperationalError as e:
+        print(f"Erro ao executar o comando DROP: {e}")
+  
     # Renomear as novas tabelas para os nomes originais
     cursor.execute('ALTER TABLE Graduacao_new RENAME TO Graduacao')
     cursor.execute('ALTER TABLE Especializacao_new RENAME TO Especializacao')
