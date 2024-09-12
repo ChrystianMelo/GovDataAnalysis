@@ -1,34 +1,36 @@
 # GovDataAnalysis
-# Indicators on Higher Education in Brazil
 
-## Overview
+## Indicators on Higher Education in Brazil
 
-This database models a well-organized collection of information regarding the infrastructure of higher education in Brazil. The data is updated until 2023 and pertains to undergraduate and specialization courses duly registered and regulated by the Ministry of Education.
+### Overview
 
-## Purpose
+GovDataAnalysis is a database that models a comprehensive collection of information regarding the infrastructure of higher education in Brazil. The data is updated to 2023 and includes undergraduate and specialization courses registered and regulated by the Ministry of Education (MEC).
 
-The aim of this database is to provide a comprehensive and accurate representation of the higher education landscape in Brazil. It serves as a valuable resource for researchers, educators, policymakers, and anyone interested in gaining insights into the variety of undergraduate and specialization programs offered in the country.
+### Purpose
 
-## Features
+The goal of this project is to offer a detailed representation of Brazil's higher education landscape, making it a valuable resource for researchers, educators, policymakers, and anyone interested in understanding the diversity and distribution of higher education courses across the country.
 
-- **Current Data (2023):** The database contains the most recent available information, ensuring users have access to updated details about courses and educational institutions.
+### Features
 
-- **Regulatory Compliance:** All information about undergraduate and specialization courses is meticulously recorded and complies with the regulations established by the Ministry of Education.
+- **Up-to-date Information (2023):** Includes the latest data on undergraduate and specialization programs, ensuring accuracy and relevance.
+  
+- **Regulatory Compliance:** Every course listed complies with the standards and regulations of the Ministry of Education, guaranteeing credibility and completeness.
+  
+- **Structured Dataset:** The data is organized to support efficient querying and analysis, making it easy to extract insights and trends.
 
-- **Structured Collection:** The information is systematically organized, facilitating navigation and extraction of relevant details. The structure allows for efficient queries and analyses.
+### How to Use
 
-## Results
+Execute the [project notebook](https://github.com/ChrystianMelo/GovDataAnalysis/blob/main/Project.ipynb) to analyze the data.
 
-Explore the results and interact with the database through the [Government Data Analysis website](https://govdataanalysis.streamlit.app/).
+### Results
 
-## Instructions
+Explore the visualizations and analyses on the [GovDataAnalysis Platform](https://govdataanalysis.streamlit.app/),, though note that due to Streamlit's limitations, queries may be slower; for faster performance, running the notebook independently is recommended.
 
-Download the [data](https://dados.gov.br/dados/conjuntos-dados/indicadores-sobre-ensino-superior) provided by the Ministry of Education regarding undergraduate and specialization courses, add these files to the project notebook, and execute.
+### Contact
 
-## Contact
+If you have any questions or need further information, please reach out to the project maintainers:
 
-For questions or further information, get in touch with: <br>
-[Chrystian Melo](https://github.com/chrystianmelo) <br>
-Fernando Coutinho<br>
-[Murillo Ribeiro](https://github.com/rbmuri)<br>
-Nauan Barbosa
+- [Chrystian Melo](https://github.com/chrystianmelo)
+- Fernando Coutinho
+- [Murillo Ribeiro](https://github.com/rbmuri)
+- Nauan Barbosa
